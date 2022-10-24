@@ -1,0 +1,33 @@
+#+title: README
+#+author: Joash Naidoo
+
+* About
+
+Here lies a RISCV emulator written in C. I undertook this project purely for educational purposes. The main focus was on readability.
+
+I would like to thank the [[https://github.com/d0iasm/rvemu][rvemu]] project, written in Rust, which inspired this project.
+
+* Building riscv-tests (Prerequisite)
+
+- Install riscv-gnu-compiler toolchain and ensure it is added to your PATH.
+- Tests are added as submodule for convenience
+
+ #+begin_src bash
+git submodule update
+
+
+ #+end_src
+
+* Building and running
+
+#+begin_src bash
+autoreconf --install
+mkdir build && cd build
+../configure # generate Makefile
+make
+#+end_src
+
+* Design Choices
+
+- I decided to create struct bit fields for representing the 6 different instruction types defined in RV32I. Despite not saving on space, I believe this produced more readable code.
+- I used hash table of function pointers to map opcodes to functions, where index matched the numeric value of opcode. This avoids a long nested switch statement however leaves a few empty elements in the table.

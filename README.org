@@ -3,25 +3,32 @@
 
 * About
 
-Here lies a RISCV emulator written in C. I undertook this project purely for educational purposes. The main focus was on readability.
+⚠ Still a work in progress ⚠
 
-I would like to thank the [[https://github.com/d0iasm/rvemu][rvemu]] project, written in Rust, which inspired this project.
+Here lies a RISCV emulator written in C. I undertook this project purely for educational purposes. This is a rewrite from an earlier [[https://github.com/Joash09/RISCV-Emulator][attempt]]. This time with greater emphasis placed on:
+- Readability
+- Integration with riscv-tests to test correctness
+
+There are many similar projects available including the [[https://github.com/d0iasm/rvemu][rvemu]] project, written in Rust, which inspired this project. Mine differs from other projects with regards to using a hash table for dispatching functions depending on their opcode as opposed to using a nested switch statement in the hope of better performance.
 
 * Building riscv-tests (Prerequisite)
 
-- Install riscv-gnu-compiler toolchain and ensure it is added to your PATH.
+- Install riscv-gnu-compiler [[https://github.com/riscv-collab/riscv-gnu-toolchain][toolchain]] and ensure it is added to your PATH.
 - Tests are added as submodule for convenience
 
  #+begin_src bash
-git submodule update
-
-
+git submodule update --init --recursive
+cd ./riscv-tests
+autoconf
+./configure --prefix=/absolute/path/to/project/root
+make
+make install # see output files in prefix path
  #+end_src
 
 * Building and running
 
 #+begin_src bash
-autoreconf --install
+autoreconf --install # in project root
 mkdir build && cd build
 ../configure # generate Makefile
 make
@@ -30,4 +37,8 @@ make
 * Design Choices
 
 - I decided to create struct bit fields for representing the 6 different instruction types defined in RV32I. Despite not saving on space, I believe this produced more readable code.
-- I used hash table of function pointers to map opcodes to functions, where index matched the numeric value of opcode. This avoids a long nested switch statement however leaves a few empty elements in the table.
+- I used hash table of function pointers to map opcodes to functions, where index matched the numeric value of opcode. This avoids a long nested switch statement.
+
+* Goals
+
+- Port to WebAssembly
